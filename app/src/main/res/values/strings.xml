@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">OpenID Viewer</string>
+    <string name="clientId">6cb0f605c5</string>
+    <string name="authEndpoint">/api/method/frappe.integrations.oauth2.authorize</string>
+    <string name="tokenEndpoint">/api/method/frappe.integrations.oauth2.get_token</string>
+    <string name="openIDEndpoint">/api/method/frappe.integrations.oauth2.openid_profile</string>
+    <string name="redirectURI">http://localhost</string>
+    <string name="serverURL">https://erp.mntechnique.com</string>
+    <string name="oauth2Scope">openid all</string>
+    <string name="clientSecret">8198ed7237</string>
+    <string name="expiresIn">3300</string>
+    <string name="package_name">com.mntechnique.openidviewer</string>
+    <string name="allowMultipleAccounts">1</string>
+</resources>
