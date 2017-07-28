@@ -3,8 +3,6 @@ package com.mntechnique.openidviewer
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Intent
-import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,14 +13,16 @@ import android.widget.Toast
 
 import com.github.scribejava.core.model.OAuthRequest
 import com.github.scribejava.core.model.Verb
+import com.mntechnique.oauth2authenticator.AddAccountSnackbar
 import com.mntechnique.oauth2authenticator.auth.AccountGeneral
 import com.mntechnique.oauth2authenticator.auth.AuthReqCallback
 import com.mntechnique.oauth2authenticator.auth.AuthRequest
+import com.mntechnique.oauth2authenticator.auth.RetrieveAuthTokenTask
 
 import org.json.JSONException
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AddAccountSnackbar() {
     internal lateinit var mAccountManager: AccountManager
     internal lateinit var mAccount: Account
     internal lateinit var accounts: Array <Account>
@@ -100,7 +100,9 @@ class MainActivity : AppCompatActivity() {
                 if (!data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME).isNullOrEmpty()){
                     for(a in accounts){
                         if(a.name.equals(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME))){
-                            getAuthToken(a, accessTokenCallback)
+                            val ratt = RetrieveAuthTokenTask(applicationContext, accessTokenCallback)
+                            ratt.execute()
+                            //getAuthToken(a, accessTokenCallback)
                         }
                     }
                 } else {
@@ -117,11 +119,16 @@ class MainActivity : AppCompatActivity() {
     fun fireUp(){
         if (accounts.size == 1) {
             mAccount = accounts[0]
-            getAuthToken(mAccount, accessTokenCallback)
-        } else if (Build.VERSION.SDK_INT >= 23) {
+            //getAuthToken(mAccount, accessTokenCallback)
+            val ratt = RetrieveAuthTokenTask(applicationContext, accessTokenCallback)
+            ratt.execute()
+        }
+        /*
+        else if (Build.VERSION.SDK_INT >= 23) {
             val intent = AccountManager.newChooseAccountIntent(null, null, arrayOf(BuildConfig.APPLICATION_ID), null, null, null, null)
             startActivityForResult(intent, 1)
         }
+        */
     }
 
     override fun onRestart() {
@@ -142,7 +149,6 @@ class MainActivity : AppCompatActivity() {
             }catch (e:JSONException){
                 callback.onErrorResponse(authToken)
             }
-            Log.d("bearerToken", authToken)
             callback.onSuccessResponse(authToken)
             print(authToken)
             mAccountManager.invalidateAuthToken(account.type, authToken)
