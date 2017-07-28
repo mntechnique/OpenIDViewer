@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var mAccount: Account
     internal lateinit var accounts: Array <Account>
     internal lateinit var accessTokenCallback: AuthReqCallback
+    internal lateinit var authRequest: AuthRequest
+    internal lateinit var bearerToken: JSONObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val tokenEndpoint = resources.getString(com.mntechnique.openidviewer.R.string.tokenEndpoint)
         val openIDEndpoint = resources.getString(com.mntechnique.openidviewer.R.string.openIDEndpoint)
 
-        val authRequest = AuthRequest(
+        authRequest = AuthRequest(
                 applicationContext,
                 oauth2Scope, clientId, clientSecret, serverURL,
                 redirectURI, authEndpoint, tokenEndpoint)
@@ -89,22 +91,24 @@ class MainActivity : AppCompatActivity() {
                 Log.d("CallbackError", s)
             }
         }
-
         fireUp()
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == 1 && resultCode == RESULT_OK){
-            if (!data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME).isNullOrEmpty()){
-                for(a in accounts){
-                    if(a.name.equals(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME))){
-                        getAuthToken(a, accessTokenCallback)
+        if (data != null){
+            if (requestCode == 1 && resultCode == RESULT_OK){
+                if (!data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME).isNullOrEmpty()){
+                    for(a in accounts){
+                        if(a.name.equals(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME))){
+                            getAuthToken(a, accessTokenCallback)
+                        }
                     }
+                } else {
+                    finish()
                 }
-            } else {
-                finish()
             }
+        } else if (data === null) {
+            Toast.makeText(applicationContext,"Account Error", Toast.LENGTH_LONG).show()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -134,12 +138,13 @@ class MainActivity : AppCompatActivity() {
                 authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN)
             }
             try {
-                var bearerToken = JSONObject(authToken)
-                callback.onSuccessResponse(bearerToken.toString())
+                bearerToken = JSONObject(authToken)
             }catch (e:JSONException){
                 callback.onErrorResponse(authToken)
             }
             Log.d("bearerToken", authToken)
+            callback.onSuccessResponse(authToken)
+            print(authToken)
             mAccountManager.invalidateAuthToken(account.type, authToken)
         }, null)
     }
