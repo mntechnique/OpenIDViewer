@@ -2,6 +2,7 @@ package com.mntechnique.openidviewer
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,16 +14,15 @@ import android.widget.Toast
 
 import com.github.scribejava.core.model.OAuthRequest
 import com.github.scribejava.core.model.Verb
-import com.mntechnique.oauth2authenticator.AddAccountSnackbar
-import com.mntechnique.oauth2authenticator.auth.AccountGeneral
-import com.mntechnique.oauth2authenticator.auth.AuthReqCallback
-import com.mntechnique.oauth2authenticator.auth.AuthRequest
-import com.mntechnique.oauth2authenticator.auth.RetrieveAuthTokenTask
+import com.mntechnique.otpmobileauth.auth.AuthReqCallback
+import com.mntechnique.otpmobileauth.auth.AccountGeneral
+import com.mntechnique.otpmobileauth.auth.AuthRequest
+import com.mntechnique.otpmobileauth.auth.RetrieveAuthTokenTask
 
 import org.json.JSONException
 import org.json.JSONObject
 
-class MainActivity : AddAccountSnackbar() {
+class MainActivity : Activity() {
     internal lateinit var mAccountManager: AccountManager
     internal lateinit var mAccount: Account
     internal lateinit var accounts: Array <Account>
@@ -56,13 +56,13 @@ class MainActivity : AddAccountSnackbar() {
         val responseCallback = object : AuthReqCallback {
             override fun onSuccessResponse(s: String) {
                 val openID = JSONObject(s)
-                val progressBar = findViewById(R.id.progressBar) as ProgressBar
-                val tvSub = findViewById(R.id.tvSub) as TextView
-                val tvName = findViewById(R.id.tvName) as TextView
-                val tvGivenName = findViewById(R.id.tvGivenName) as TextView
-                val tvFamName = findViewById(R.id.tvFamName) as TextView
-                val tvEmail = findViewById(R.id.tvEmail) as TextView
-                val llOpenID = findViewById(R.id.llOpenID) as LinearLayout
+                val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+                val tvSub = findViewById<TextView>(R.id.tvSub)
+                val tvName = findViewById<TextView>(R.id.tvName)
+                val tvGivenName = findViewById<TextView>(R.id.tvGivenName)
+                val tvFamName = findViewById<TextView>(R.id.tvFamName)
+                val tvEmail = findViewById<TextView>(R.id.tvEmail)
+                val llOpenID = findViewById<LinearLayout>(R.id.llOpenID)
 
                 tvSub.text = openID.getString("sub")
                 tvName.text = openID.getString("name")

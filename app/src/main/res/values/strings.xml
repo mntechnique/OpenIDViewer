@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">OpenID Viewer</string>
-    <string name="clientId">81da0ed36e</string>
+    <string name="clientId">4cea8f6c7e</string>
     <string name="authEndpoint">/api/method/frappe.integrations.oauth2.authorize</string>
     <string name="tokenEndpoint">/api/method/frappe.integrations.oauth2.get_token</string>
     <string name="openIDEndpoint">/api/method/frappe.integrations.oauth2.openid_profile</string>
-    <string name="redirectURI">http://localhost</string>
+    <string name="redirectURI">oauth-2://android-device</string>
     <string name="serverURL">http://192.168.0.108:8000</string>
     <string name="oauth2Scope">openid all</string>
-    <string name="clientSecret">35fc4e08f2</string>
+    <string name="clientSecret">d2274cc0a9</string>
     <string name="expiresIn">3300</string>
     <string name="package_name">com.mntechnique.openidviewer</string>
     <string name="allowMultipleAccounts">0</string>
